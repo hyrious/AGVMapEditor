@@ -1,0 +1,33 @@
+﻿<Window x:Class="Editor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Editor"
+        mc:Ignorable="d"
+        Title="AGV Map Editor" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen"
+        MouseDoubleClick="Window_MouseDoubleClick"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing">
+    <Grid>
+        <InkCanvas Name="ic"
+                   EditingMode="None"
+                   MouseLeftButtonDown="Ic_MouseLeftButtonDown"
+                   MouseLeftButtonUp="Ic_MouseLeftButtonUp"
+                   MouseRightButtonDown="Ic_MouseRightButtonDown"
+                   MouseRightButtonUp="Ic_MouseRightButtonUp"
+                   MouseMove="Ic_MouseMove"
+                   KeyDown="Ic_KeyDown"
+                   KeyUp="Ic_KeyUp" />
+        <Canvas>
+            <Button Canvas.Right="10"
+                    Canvas.Bottom="10"
+                    Padding="10,5"
+                    MouseMove="Button_MouseMove"
+                    Content="Save"
+                    Name="sb"
+                    Click="Sb_Click" />
+        </Canvas>
+    </Grid>
+</Window>

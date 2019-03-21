@@ -1,0 +1,185 @@
+﻿<Window x:Class="Editor.PropertiesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Editor"
+        mc:Ignorable="d"
+        Title="PropertiesWindow"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="MinWidth" Value="50" />
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="MinWidth" Value="50" />
+        </Style>
+    </Window.Resources>
+    <StackPanel Margin="2">
+        <WrapPanel Grid.ColumnSpan="2">
+            <Label Content="Y" />
+            <TextBox Name="X" TextChanged="X_TextChanged" />
+            <Label Content="X" />
+            <TextBox Name="Y" TextChanged="Y_TextChanged" />
+            <Label Content="PositionBarcode (" />
+            <TextBox Name="I" TextChanged="I_TextChanged" />
+            <Label Content=", " />
+            <TextBox Name="J" TextChanged="J_TextChanged" />
+            <Label Content=")" />
+        </WrapPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Content="Up" />
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" Margin="2">
+                <Label Content="Id" />
+                <ComboBox Name="UpId" SelectionChanged="UpId_SelectionChanged" >
+                    <ComboBoxItem Content="" />
+                </ComboBox>
+                <Label Content="Check1Mode" />
+                <ComboBox Name="UpCheck1Mode" SelectionChanged="UpCheck1Mode_SelectionChanged">
+                    <ComboBoxItem Content="" />
+                    <ComboBoxItem Content="1" />
+                    <ComboBoxItem Content="2" />
+                    <ComboBoxItem Content="3" />
+                    <ComboBoxItem Content="4" />
+                    <ComboBoxItem Content="5" />
+                    <ComboBoxItem Content="6" />
+                    <ComboBoxItem Content="7" />
+                </ComboBox>
+                <Label Content="Check2Mode" />
+                <ComboBox Name="UpCheck2Mode" SelectionChanged="UpCheck2Mode_SelectionChanged">
+                    <ComboBoxItem Content="" />
+                    <ComboBoxItem Content="1" />
+                    <ComboBoxItem Content="2" />
+                    <ComboBoxItem Content="3" />
+                    <ComboBoxItem Content="4" />
+                    <ComboBoxItem Content="5" />
+                    <ComboBoxItem Content="6" />
+                    <ComboBoxItem Content="7" />
+                </ComboBox>
+                <Label Content="Pose" />
+                <ComboBox Name="UpPose" SelectionChanged="UpPose_SelectionChanged">
+                    <ComboBoxItem Content="0" />
+                    <ComboBoxItem Content="1" />
+                </ComboBox>
+            </StackPanel>
+            <Label Grid.Row="1" Content="Down" />
+            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2" Margin="2">
+                <Label Content="Id" />
+                <ComboBox Name="DownId" SelectionChanged="DownId_SelectionChanged">
+                    <ComboBoxItem Content="" />
+                </ComboBox>
+                <Label Content="Check1Mode" />
+                <ComboBox Name="DownCheck1Mode" SelectionChanged="DownCheck1Mode_SelectionChanged">
+                    <ComboBoxItem Content="" />
+                    <ComboBoxItem Content="1" />
+                    <ComboBoxItem Content="2" />
+                    <ComboBoxItem Content="3" />
+                    <ComboBoxItem Content="4" />
+                    <ComboBoxItem Content="5" />
+                    <ComboBoxItem Content="6" />
+                    <ComboBoxItem Content="7" />
+                </ComboBox>
+                <Label Content="Check2Mode" />
+                <ComboBox Name="DownCheck2Mode" SelectionChanged="DownCheck2Mode_SelectionChanged">
+                    <ComboBoxItem Content="" />
+                    <ComboBoxItem Content="1" />
+                    <ComboBoxItem Content="2" />
+                    <ComboBoxItem Content="3" />
+                    <ComboBoxItem Content="4" />
+                    <ComboBoxItem Content="5" />
+                    <ComboBoxItem Content="6" />
+                    <ComboBoxItem Content="7" />
+                </ComboBox>
+                <Label Content="Pose" />
+                <ComboBox Name="DownPose" SelectionChanged="DownPose_SelectionChanged">
+                    <ComboBoxItem Content="0" />
+                    <ComboBoxItem Content="1" />
+                </ComboBox>
+            </StackPanel>
+            <Label Grid.Row="2" Content="Left" />
+            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2" Margin="2">
+                <Label Content="Id" />
+                <ComboBox Name="LeftId" SelectionChanged="LeftId_SelectionChanged">
+                    <ComboBoxItem Content="" />
+                </ComboBox>
+                <Label Content="Check1Mode" />
+                <ComboBox Name="LeftCheck1Mode" SelectionChanged="LeftCheck1Mode_SelectionChanged">
+                    <ComboBoxItem Content="" />
+                    <ComboBoxItem Content="1" />
+                    <ComboBoxItem Content="2" />
+                    <ComboBoxItem Content="3" />
+                    <ComboBoxItem Content="4" />
+                    <ComboBoxItem Content="5" />
+                    <ComboBoxItem Content="6" />
+                    <ComboBoxItem Content="7" />
+                </ComboBox>
+                <Label Content="Check2Mode" />
+                <ComboBox Name="LeftCheck2Mode" SelectionChanged="LeftCheck2Mode_SelectionChanged">
+                    <ComboBoxItem Content="" />
+                    <ComboBoxItem Content="1" />
+                    <ComboBoxItem Content="2" />
+                    <ComboBoxItem Content="3" />
+                    <ComboBoxItem Content="4" />
+                    <ComboBoxItem Content="5" />
+                    <ComboBoxItem Content="6" />
+                    <ComboBoxItem Content="7" />
+                </ComboBox>
+                <Label Content="Pose" />
+                <ComboBox Name="LeftPose" SelectionChanged="LeftPose_SelectionChanged">
+                    <ComboBoxItem Content="0" />
+                    <ComboBoxItem Content="1" />
+                </ComboBox>
+            </StackPanel>
+            <Label Grid.Row="3" Content="Right" />
+            <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="2" Margin="2">
+                <Label Content="Id" />
+                <ComboBox Name="RightId" SelectionChanged="RightId_SelectionChanged">
+                    <ComboBoxItem Content="" />
+                </ComboBox>
+                <Label Content="Check1Mode" />
+                <ComboBox Name="RightCheck1Mode" SelectionChanged="RightCheck1Mode_SelectionChanged">
+                    <ComboBoxItem Content="" />
+                    <ComboBoxItem Content="1" />
+                    <ComboBoxItem Content="2" />
+                    <ComboBoxItem Content="3" />
+                    <ComboBoxItem Content="4" />
+                    <ComboBoxItem Content="5" />
+                    <ComboBoxItem Content="6" />
+                    <ComboBoxItem Content="7" />
+                </ComboBox>
+                <Label Content="Check2Mode" />
+                <ComboBox Name="RightCheck2Mode" SelectionChanged="RightCheck2Mode_SelectionChanged">
+                    <ComboBoxItem Content="" />
+                    <ComboBoxItem Content="1" />
+                    <ComboBoxItem Content="2" />
+                    <ComboBoxItem Content="3" />
+                    <ComboBoxItem Content="4" />
+                    <ComboBoxItem Content="5" />
+                    <ComboBoxItem Content="6" />
+                    <ComboBoxItem Content="7" />
+                </ComboBox>
+                <Label Content="Pose" />
+                <ComboBox Name="RightPose" SelectionChanged="RightPose_SelectionChanged">
+                    <ComboBoxItem Content="0" />
+                    <ComboBoxItem Content="1" />
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</Window>

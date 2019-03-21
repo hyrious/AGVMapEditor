@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.489
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGVMapEditor", "AGVMapEditor\AGVMapEditor.csproj", "{21EAD10E-7C29-42A8-B46D-41B0C2090BFD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "Editor\Editor.csproj", "{56400282-70C7-4E79-9610-8F11B5CF213D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{21EAD10E-7C29-42A8-B46D-41B0C2090BFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{21EAD10E-7C29-42A8-B46D-41B0C2090BFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{21EAD10E-7C29-42A8-B46D-41B0C2090BFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{21EAD10E-7C29-42A8-B46D-41B0C2090BFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56400282-70C7-4E79-9610-8F11B5CF213D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56400282-70C7-4E79-9610-8F11B5CF213D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56400282-70C7-4E79-9610-8F11B5CF213D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56400282-70C7-4E79-9610-8F11B5CF213D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
