@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Editor")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("AGVMapEditor")]
+[assembly: AssemblyDescription("AGV Map Editor")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Editor")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCompany("HYRIOUS")]
+[assembly: AssemblyProduct("AGVMapEditor")]
+[assembly: AssemblyCopyright("Copyright © hyrious 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

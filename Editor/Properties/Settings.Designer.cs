@@ -22,17 +22,5 @@ namespace Editor.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[]")]
-        public string Map {
-            get {
-                return ((string)(this["Map"]));
-            }
-            set {
-                this["Map"] = value;
-            }
-        }
     }
 }
