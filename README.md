@@ -34,4 +34,4 @@ SUM|87|69|1041
 
 ## License
 
-No.
+[Good Luck With That Public License](https://github.com/me-shaon/GLWTPL).
