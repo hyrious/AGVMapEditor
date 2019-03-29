@@ -1,0 +1,82 @@
+% !TeX root = ./report.tex
+% !TEX program = xelatex
+% !TeX encoding = UTF-8
+% Copyright 2019 hyrious <hyrious@outlook.com>
+
+\documentclass[zihao=-4]{ctexrep}
+\ctexset{section/format+=\raggedright}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2.5cm,right=1.5cm]{geometry}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{fontspec}
+\setmainfont{Times Newer Roman}
+\setlength{\baselineskip}{22pt}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{
+  hidelinks,
+  pdftitle={苏州大学本科生毕业设计（论文）},
+  pdfauthor={hyrious}
+}
+\usepackage{titling}
+\title{苏州大学本科生毕业设计（论文）}
+\author{hyrious}
+\usepackage{fancyhdr}
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyhead[C]{\ttfamily\zihao{-5}{\thetitle}}
+  \fancyfoot[C]{\ttfamily\zihao{-5}\thepage}
+  \setlength{\headheight}{15pt}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+\pagestyle{plain}
+\usepackage{listings}
+\usepackage{lipsum}
+
+\begin{document}
+
+\tableofcontents
+
+\chapter*{摘要}
+
+\input{abstract}
+
+\chapter*{前言}
+\addcontentsline{toc}{chapter}{{前言}}
+
+\input{preface}
+
+\chapter{绪论}
+
+\input{1-intro}
+
+\chapter{可行性和需求分析}
+
+\input{2-feas}
+
+\chapter{相关技术简介}
+
+\input{3-tech}
+
+\chapter{系统设计}
+
+\input{4-design}
+
+\chapter{系统实现}
+
+\input{5-impl}
+
+\chapter{总结与展望}
+
+\input{6-conc}
+
+\bibliographystyle{IEEEtran}
+\bibliography{cites}
+\addcontentsline{toc}{chapter}{{参考文献}}
+
+\chapter*{致谢}
+\addcontentsline{toc}{chapter}{{致谢}}
+
+\end{document}
