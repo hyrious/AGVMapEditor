@@ -1,0 +1,20 @@
+% !TEX program = xelatex
+% !TeX encoding = UTF-8
+% Copyright 2019 hyrious <hyrious@outlook.com>
+\documentclass[tikz]{standalone}
+\usepackage{ctex,tikz}
+
+\begin{document}
+  \tikzstyle{rect} = [very thick,rectangle,text centered,draw=black,minimum width=3cm,minimum height=3cm]
+  \tikzstyle{arrow} = [very thick,->,>=stealth]
+
+  \begin{tikzpicture}[node distance=5cm,font=\sffamily]
+    \node (a) [rect] {窗口界面};
+    \node (b) [rect, right of=a] {控制器};
+    \node (c) [rect, right of=b] {数据};
+    \draw [arrow] (a.350) -- (b.190);
+    \draw [arrow, dashed] (b.170) -- (a.10);
+    \draw [arrow] (b.350) -- (c.190);
+    \draw [arrow, dashed] (c.170) -- (b.10);
+  \end{tikzpicture}
+\end{document}

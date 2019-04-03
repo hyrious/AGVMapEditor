@@ -1,0 +1,56 @@
+% !TEX program = xelatex
+% !TeX encoding = UTF-8
+% Copyright 2019 hyrious <hyrious@outlook.com>
+\documentclass[tikz]{standalone}
+\usepackage{ctex,tikz}
+\usetikzlibrary{arrows}
+\makeatletter
+\pgfdeclareshape{datastore}{
+  \inheritsavedanchors[from=rectangle]
+  \inheritanchorborder[from=rectangle]
+  \inheritanchor[from=rectangle]{center}
+  \inheritanchor[from=rectangle]{base}
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{north east}
+  \inheritanchor[from=rectangle]{east}
+  \inheritanchor[from=rectangle]{south east}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{south west}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{north west}
+  \backgroundpath{
+    %  store lower right in xa/ya and upper right in xb/yb
+    \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+    \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya}}
+    \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@yb}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+ }
+}
+\makeatother
+
+\begin{document}
+  \begin{tikzpicture}[font=\sffamily,
+    every matrix/.style={ampersand replacement=\&,column sep=2cm,row sep=2cm},
+    source/.style={draw,thick,rounded corners,fill=yellow!20,inner sep=.3cm},
+    process/.style={draw,thick,circle,fill=blue!20},
+    sink/.style={source,fill=green!20},
+    datastore/.style={draw,very thick,shape=datastore,inner sep=.3cm},
+    dots/.style={gray,scale=2},
+    to/.style={->,>=stealth',shorten >=1pt,thick,font=\sffamily\footnotesize},
+    every node/.style={align=center}]
+
+    \matrix{
+      \node[source] (canvas) {{画布}}; \&
+      \node[process] (control) {{绘图事件处理}}; \&
+      \node[datastore] (data) {{形状数据}}; \\
+    };
+
+    \draw[to] (canvas) -- node[midway,above] {{鼠标事件}} (control);
+    \draw[to] (control) -- node[midway,above] {{抽象图形数据}} (data);
+    \draw[to] (data) to[bend left=50]
+      node[midway,above] {{具体图形数据}} (canvas);
+
+  \end{tikzpicture}
+\end{document}
