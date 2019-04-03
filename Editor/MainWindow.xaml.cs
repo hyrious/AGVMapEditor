@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using LiteDB;
+using Microsoft.Win32;
 
 namespace Editor {
     internal static class NativeMethods {
@@ -339,6 +342,23 @@ namespace Editor {
             NeedSync = false;
             sb.Visibility = Visibility.Hidden;
             sb.Content = "Save";
+        }
+
+        private void Es_Click(object sender, RoutedEventArgs e) {
+            StringBuilder builder = new StringBuilder(Coord.ToTableSql);
+            foreach (Coord c in Map) {
+                builder.Append(c.ToSql);
+                builder.Append(';');
+            }
+            string result = builder.ToString();
+            SaveFileDialog dialog = new SaveFileDialog {
+                FileName = "coords",
+                DefaultExt = ".sql",
+                Filter = "SQL File (.sql)|*.sql|Text documents (.txt)|*.txt"
+            };
+            if (dialog.ShowDialog() == true) {
+                File.WriteAllText(dialog.FileName, result);
+            }
         }
 
         private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e) {

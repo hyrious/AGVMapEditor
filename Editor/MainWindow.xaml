@@ -21,6 +21,12 @@
                    KeyDown="Ic_KeyDown"
                    KeyUp="Ic_KeyUp" />
         <Canvas>
+            <Button Canvas.Top="10"
+                    Canvas.Right="10"
+                    Padding="10,5"
+                    Content="Export SQL"
+                    Name="es"
+                    Click="Es_Click"/>
             <Button Canvas.Right="10"
                     Canvas.Bottom="10"
                     Padding="10,5"
