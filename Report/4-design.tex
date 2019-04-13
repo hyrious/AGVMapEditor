@@ -1,0 +1,88 @@
+% !TeX root = ./report.tex
+
+本章是软件开发的概要设计和详细设计，主要目标是以需求分析为依据，记录系统整体与细节上的具体实现上的考虑。本章将作为产品实现、特性要求和控制的依据。
+
+\section{概要设计}
+
+\subsection{服务模型}
+
+即数据、功能与用户之间的关系，本地图编辑器的服务模型分为三层：用户、业务逻辑和数据服务。用户层提供交互界面并调用业务 API，业务逻辑层处理数据并向用户提供相关功能的接口，数据服务由使用的数据库实现。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{assets/serv.pdf}
+  \caption{服务模型}
+  \label{fig:serv}
+\end{figure}
+
+\subsection{数据流图}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{assets/dataflow.pdf}
+  \caption{数据流图}
+  \label{fig:dataflow}
+\end{figure}
+
+\subsection{流程图}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{assets/flow.pdf}
+  \caption{流程图}
+  \label{fig:flow}
+\end{figure}
+
+\section{详细设计}
+
+\subsection{系统数据库设计}
+
+本系统追求简洁方便，总共涉及一张表，即存储了所有坐标点和它上面的属性，包括各个方向上的小车姿态等，详细设计如下：
+
+\subsubsection{数据库 E-R 图}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{assets/er.pdf}
+  \caption{数据库 E-R 图}
+  \label{fig:er}
+\end{figure}
+
+\subsubsection{数据表设计}
+
+\paragraph{coords}
+
+该表用来存储所有坐标点的所有数据，设计如表：
+
+\begin{longtabu}to \textwidth{rllX}
+  \toprule
+  列名 & 数据类型 & 能否为空 & 描述 \\
+  \midrule
+  \endhead
+  \bottomrule
+  \endfoot
+  id & \texttt{integer} & 否 & 创建时生成的唯一 \texttt{ID}，默认为递增 \\
+  x & \texttt{integer} & 否 & （相对于画布的）X 坐标 \\
+  y & \texttt{integer} & 否 & （相对于画布的）Y 坐标 \\
+  position\_barcode & \texttt{integer} & 否 & 坐标点二维码 \\
+  up\_point\_id & \texttt{integer} & 是 & 指向上方的点的 \texttt{ID}，为空或 0 代表没有连线 \\
+  up\_check1\_mode & \texttt{integer} & 是 & 向上方运动时检测 1 的模式，取 1-7 七种 \\
+  up\_check2\_mode & \texttt{integer} & 是 & 向上方运动时检测 2 的模式，取 1-7 七种 \\
+  up\_pose & \texttt{integer} & 是 & 向上方运动时的姿态，取 0、1 分别代表前进后退 \\
+  down\_point\_id & \texttt{integer} & 是 & 指向下方的点的 \texttt{ID}，为空或 0 代表没有连线 \\
+  down\_check1\_mode & \texttt{integer} & 是 & 向下方运动时检测 1 的模式，取 1-7 七种 \\
+  down\_check2\_mode & \texttt{integer} & 是 & 向下方运动时检测 2 的模式，取 1-7 七种 \\
+  down\_pose & \texttt{integer} & 是 & 向下方运动时的姿态，取 0、1 分别代表前进后退 \\
+  left\_point\_id & \texttt{integer} & 是 & 指向左方的点的 \texttt{ID}，为空或 0 代表没有连线 \\
+  left\_check1\_mode & \texttt{integer} & 是 & 向左方运动时检测 1 的模式，取 1-7 七种 \\
+  left\_check2\_mode & \texttt{integer} & 是 & 向左方运动时检测 2 的模式，取 1-7 七种 \\
+  left\_pose & \texttt{integer} & 是 & 向左方运动时的姿态，取 0、1 分别代表前进后退 \\
+  right\_point\_id & \texttt{integer} & 是 & 指向右方的点的 \texttt{ID}，为空或 0 代表没有连线 \\
+  right\_check1\_mode & \texttt{integer} & 是 & 向右方运动时检测 1 的模式，取 1-7 七种 \\
+  right\_check2\_mode & \texttt{integer} & 是 & 向右方运动时检测 2 的模式，取 1-7 七种 \\
+  right\_pose & \texttt{integer} & 是 & 向右方运动时的姿态，取 0、1 分别代表前进后退
+\end{longtabu}
+
+\section{本章总结}
+
+本章展现了设计上的一些阶段性成果，基本概括了软件的结构和实现形式。下一章将通过一些真实的代码来介绍具体的实现。
