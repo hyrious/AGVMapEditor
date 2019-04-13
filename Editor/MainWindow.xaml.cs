@@ -160,10 +160,11 @@ namespace Editor {
                 ic.Children.Add(Label_Left);
                 ic.Children.Add(Label_Right);
             }
+            Dot.Stroke = Brushes.Black;
             double x = X + ox, y = Y + oy;
             InkCanvas.SetLeft(Dot, x - Dot.Width / 2);
             InkCanvas.SetTop(Dot, y - Dot.Height / 2);
-            Label.Text = $"#{Id} ({I}, {J})\n(Y={X},X={Y})";
+            Label.Text = $"#{Id} ({I}, {J})\n(Y={(int)X},X={(int)Y})";
             InkCanvas.SetLeft(Label, x);
             InkCanvas.SetTop(Label, y + Dot.Height / 2);
             if (Up != null) {
@@ -172,7 +173,7 @@ namespace Editor {
                 S_Up.Points.Add(new Point(Up.X + ox - 6, Up.Y + oy + 10));
                 S_Up.Points.Add(new Point(Up.X + ox, Up.Y + oy));
                 S_Up.Points.Add(new Point(Up.X + ox + 6, Up.Y + oy + 10));
-                Label_Up.Text = $"{Y - Up.Y} mm";
+                Label_Up.Text = $"{(int)(Y - Up.Y)} mm";
                 Label_Up.HorizontalAlignment = HorizontalAlignment.Left;
                 Label_Up.VerticalAlignment = VerticalAlignment.Center;
                 InkCanvas.SetLeft(Label_Up, (X + Up.X) / 2 + ox);
@@ -187,7 +188,7 @@ namespace Editor {
                 S_Down.Points.Add(new Point(Down.X + ox + 6, Down.Y + oy - 10));
                 S_Down.Points.Add(new Point(Down.X + ox, Down.Y + oy));
                 S_Down.Points.Add(new Point(Down.X + ox - 6, Down.Y + oy - 10));
-                Label_Down.Text = $"{Down.Y - Y} mm";
+                Label_Down.Text = $"{(int)(Down.Y - Y)} mm";
                 Label_Down.HorizontalAlignment = HorizontalAlignment.Right;
                 Label_Down.VerticalAlignment = VerticalAlignment.Center;
                 InkCanvas.SetLeft(Label_Down, (X + Down.X) / 2 + ox);
@@ -202,7 +203,7 @@ namespace Editor {
                 S_Left.Points.Add(new Point(Left.X + ox + 10, Left.Y + oy + 6));
                 S_Left.Points.Add(new Point(Left.X + ox, Left.Y + oy));
                 S_Left.Points.Add(new Point(Left.X + ox + 10, Left.Y + oy - 6));
-                Label_Left.Text = $"{X - Left.X} mm";
+                Label_Left.Text = $"{(int)(X - Left.X)} mm";
                 Label_Left.HorizontalAlignment = HorizontalAlignment.Center;
                 Label_Left.VerticalAlignment = VerticalAlignment.Bottom;
                 Label_Left.TextAlignment = TextAlignment.Center;
@@ -218,7 +219,7 @@ namespace Editor {
                 S_Right.Points.Add(new Point(Right.X + ox - 10, Right.Y + oy - 6));
                 S_Right.Points.Add(new Point(Right.X + ox, Right.Y + oy));
                 S_Right.Points.Add(new Point(Right.X + ox - 10, Right.Y + oy + 6));
-                Label_Right.Text = $"{Right.X - X} mm";
+                Label_Right.Text = $"{(int)(Right.X - X)} mm";
                 Label_Right.HorizontalAlignment = HorizontalAlignment.Center;
                 Label_Right.VerticalAlignment = VerticalAlignment.Top;
                 Label_Right.TextAlignment = TextAlignment.Center;
@@ -237,7 +238,15 @@ namespace Editor {
                 ic.Children.Remove(L_Down);
                 ic.Children.Remove(L_Left);
                 ic.Children.Remove(L_Right);
+                ic.Children.Remove(S_Up);
+                ic.Children.Remove(S_Down);
+                ic.Children.Remove(S_Left);
+                ic.Children.Remove(S_Right);
                 ic.Children.Remove(Label);
+                ic.Children.Remove(Label_Up);
+                ic.Children.Remove(Label_Down);
+                ic.Children.Remove(Label_Left);
+                ic.Children.Remove(Label_Right);
             }
         }
         public override string ToString() => $"#{Id} ({X}, {Y}) ({I}, {J})";
@@ -268,6 +277,7 @@ namespace Editor {
 
         protected override void OnSourceInitialized(EventArgs e) => this.RemoveIcon();
 
+        private string FileName = "./MapData.db";
         private bool NeedSync = false;
         private List<Coord> Map = new List<Coord>();
         private double OffsetX, OffsetY;
@@ -290,15 +300,8 @@ namespace Editor {
         private void Window_Loaded(object sender, RoutedEventArgs e) {
             ic.Children.Add(HLine);
             ic.Children.Add(VLine);
-            sb.Visibility = NeedSync ? Visibility.Visible : Visibility.Hidden;
             PropertiesWindow = new PropertiesWindow { Owner = this };
-            using (LiteDatabase db = new LiteDatabase("./MapData.db")) {
-                LiteCollection<Coord> map = db.GetCollection<Coord>("map");
-                Map = map.FindAll().ToList();
-            }
-            foreach (Coord c in Map) c.FindNeighbours(Map);
-            if (Map.Count > 0) Coord.Id_ = Map.Max(c => c.Id);
-            RefreshMap();
+            Open_Click(sender, e);
         }
 
         private void Ic_KeyDown(object sender, KeyEventArgs e) {
@@ -324,15 +327,13 @@ namespace Editor {
                     LastCur = Cur = null;
                     NeedSync = true;
                 }
-                sb.Visibility = NeedSync ? Visibility.Visible : Visibility.Hidden;
                 RefreshMap();
             }
         }
 
         private void Sb_Click(object sender, RoutedEventArgs e) {
-            sb.Content = "Saving...";
             foreach (Coord c in Map) c.UpdateNeighbours();
-            using (LiteDatabase db = new LiteDatabase("./MapData.db")) {
+            using (LiteDatabase db = new LiteDatabase(FileName)) {
                 db.DropCollection("map");
                 LiteCollection<Coord> map = db.GetCollection<Coord>("map");
                 map.EnsureIndex(c => c.Id);
@@ -340,8 +341,6 @@ namespace Editor {
             }
             MessageBox.Show("Saved");
             NeedSync = false;
-            sb.Visibility = Visibility.Hidden;
-            sb.Content = "Save";
         }
 
         private void Es_Click(object sender, RoutedEventArgs e) {
@@ -361,6 +360,106 @@ namespace Editor {
             }
         }
 
+        private void About_Click(object sender, RoutedEventArgs e) {
+            MessageBox.Show("AGV Map Editor\n\n" +
+                "Copyright @hyrious 2019\n" +
+                "https://github.com/hyrious/AGVMapEditor", "AGV Map Editor");
+        }
+
+        private void Help_Click(object sender, RoutedEventArgs e) {
+            MessageBox.Show(@"Left Button: Select/Drag
+Double Click: New Point/Open Properties Window
+Press Ctrl: No Alignment
+Press Right Button: Drag Canvas");
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e) {
+            if (LastCur != null) {
+                Map.Remove(LastCur);
+                foreach (Coord c in Map) {
+                    if (c.Up == LastCur) c.Up = null;
+                    if (c.Down == LastCur) c.Down = null;
+                    if (c.Left == LastCur) c.Left = null;
+                    if (c.Right == LastCur) c.Right = null;
+                }
+                LastCur.Remove(ic);
+                LastCur = Cur = null;
+                NeedSync = true;
+            }
+            RefreshMap();
+            n.Header = "#";
+        }
+
+        private void Edit_Click(object sender, RoutedEventArgs e) {
+            if (LastCur != null) {
+                HLine.Hide();
+                VLine.Hide();
+                PropertiesWindow.Title = $"#{LastCur.Id} - Properties";
+                PropertiesWindow.LoadMap(Map);
+                PropertiesWindow.Coord = LastCur;
+                PropertiesWindow.Show();
+                NeedSync = true;
+            }
+        }
+
+        private void Open_Click(object sender, RoutedEventArgs e) {
+            OpenFileDialog dialog = new OpenFileDialog {
+                FileName = FileName,
+                DefaultExt = ".db",
+                Filter = "Data File (.db)|*.db",
+                CheckFileExists = false
+            };
+            if (dialog.ShowDialog() == true) {
+                FileName = dialog.FileName;
+                using (LiteDatabase db = new LiteDatabase(FileName)) {
+                    LiteCollection<Coord> map = db.GetCollection<Coord>("map");
+                    Map = map.FindAll().ToList();
+                }
+                foreach (Coord c in Map) c.FindNeighbours(Map);
+                if (Map.Count > 0) Coord.Id_ = Map.Max(c => c.Id);
+                RefreshMap();
+            } else {
+                MessageBox.Show("Canceled");
+            }
+        }
+
+        private void SaveAs_Click(object sender, RoutedEventArgs e) {
+            OpenFileDialog dialog = new OpenFileDialog {
+                FileName = FileName,
+                DefaultExt = ".db",
+                Filter = "Data File (.db)|*.db",
+                CheckFileExists = false
+            };
+            if (dialog.ShowDialog() == true) {
+                FileName = dialog.FileName;
+                foreach (Coord c in Map) c.UpdateNeighbours();
+                using (LiteDatabase db = new LiteDatabase(FileName)) {
+                    db.DropCollection("map");
+                    LiteCollection<Coord> map = db.GetCollection<Coord>("map");
+                    map.EnsureIndex(c => c.Id);
+                    map.InsertBulk(Map);
+                }
+                MessageBox.Show("Saved");
+                NeedSync = false;
+            } else {
+                MessageBox.Show("Canceled");
+            }
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e) {
+            if (NeedSync) {
+                switch (MessageBox.Show("You have unsaved stuffs, save it now?", "Save?", MessageBoxButton.YesNoCancel)) {
+                    case MessageBoxResult.Cancel: return;
+                    case MessageBoxResult.Yes: Sb_Click(sender, e); break;
+                    case MessageBoxResult.No: break;
+                    case MessageBoxResult.None: break;
+                    case MessageBoxResult.OK: break;
+                    default: break;
+                }
+            }
+            Close();
+        }
+
         private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
             if (LastCur == null && Cur == null) {
                 Map.Add(Cur = new Coord { X = CurX, Y = CurY });
@@ -375,7 +474,6 @@ namespace Editor {
                 PropertiesWindow.Show();
                 NeedSync = true;
             }
-            sb.Visibility = NeedSync ? Visibility.Visible : Visibility.Hidden;
         }
 
         private void Ic_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
@@ -389,7 +487,14 @@ namespace Editor {
             }
         }
 
-        private void Ic_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) => LastCur = Cur;
+        private void Ic_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
+            LastCur = Cur;
+            if (LastCur != null) {
+                LastCur.Dot.Stroke = Brushes.Red;
+                n.Header = $"#{LastCur.Id}";
+            } else
+                n.Header = "#";
+        }
 
         private void Ic_MouseRightButtonDown(object sender, MouseButtonEventArgs e) => IsPressingRight = true;
 
@@ -435,8 +540,11 @@ namespace Editor {
                     VLine.Show();
                 }
             }
-            foreach (Coord c in Map) c.Update(ic, OffsetX, OffsetY);
-            sb.Visibility = NeedSync ? Visibility.Visible : Visibility.Hidden;
+            foreach (Coord c in Map) {
+                c.Update(ic, OffsetX, OffsetY);
+                if (LastCur != null)
+                    LastCur.Dot.Stroke = Brushes.Red;
+            }
         }
 
         private void Button_MouseMove(object sender, MouseEventArgs e) => Ic_MouseMove(sender, e);

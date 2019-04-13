@@ -47,7 +47,7 @@
             <Label Grid.Row="0" Content="Up" />
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" Margin="2">
                 <Label Content="Id" />
-                <ComboBox Name="UpId" SelectionChanged="UpId_SelectionChanged" >
+                <ComboBox Name="UpId" SelectionChanged="UpId_SelectionChanged" TextBoxBase.TextChanged="UpId_TextChanged" IsEditable="True">
                     <ComboBoxItem Content="" />
                 </ComboBox>
                 <Label Content="Check1Mode" />
@@ -81,7 +81,7 @@
             <Label Grid.Row="1" Content="Down" />
             <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2" Margin="2">
                 <Label Content="Id" />
-                <ComboBox Name="DownId" SelectionChanged="DownId_SelectionChanged">
+                <ComboBox Name="DownId" SelectionChanged="DownId_SelectionChanged" TextBoxBase.TextChanged="DownId_TextChanged" IsEditable="True">
                     <ComboBoxItem Content="" />
                 </ComboBox>
                 <Label Content="Check1Mode" />
@@ -115,7 +115,7 @@
             <Label Grid.Row="2" Content="Left" />
             <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2" Margin="2">
                 <Label Content="Id" />
-                <ComboBox Name="LeftId" SelectionChanged="LeftId_SelectionChanged">
+                <ComboBox Name="LeftId" SelectionChanged="LeftId_SelectionChanged" TextBoxBase.TextChanged="LeftId_TextChanged" IsEditable="True">
                     <ComboBoxItem Content="" />
                 </ComboBox>
                 <Label Content="Check1Mode" />
@@ -149,7 +149,7 @@
             <Label Grid.Row="3" Content="Right" />
             <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="2" Margin="2">
                 <Label Content="Id" />
-                <ComboBox Name="RightId" SelectionChanged="RightId_SelectionChanged">
+                <ComboBox Name="RightId" SelectionChanged="RightId_SelectionChanged" TextBoxBase.TextChanged="RightId_TextChanged" IsEditable="True">
                     <ComboBoxItem Content="" />
                 </ComboBox>
                 <Label Content="Check1Mode" />

@@ -11,7 +11,26 @@
         Loaded="Window_Loaded"
         Closing="Window_Closing">
     <Grid>
-        <InkCanvas Name="ic"
+        <DockPanel>
+            <Menu DockPanel.Dock="Top" Padding="2">
+                <MenuItem Header="_File" Padding="5,2">
+                    <MenuItem Header="New/_Open" Click="Open_Click" />
+                    <MenuItem Header="_Save" Click="Sb_Click" />
+                    <MenuItem Header="Save _As" Click="SaveAs_Click" />
+                    <MenuItem Header="_Export SQL" Click="Es_Click" />
+                    <MenuItem Header="E_xit" Click="Exit_Click" />
+                </MenuItem>
+                <MenuItem Header="_Edit" Padding="5,2">
+                    <MenuItem Header="#" IsEnabled="False" Name="n" />
+                    <MenuItem Header="Edit _Properties" Click="Edit_Click" />
+                    <MenuItem Header="_Delete" Click="Delete_Click" />
+                </MenuItem>
+                <MenuItem Header="_Help" Padding="5,2">
+                    <MenuItem Header="_Content" Click="Help_Click" />
+                    <MenuItem Header="_About" Click="About_Click"/>
+                </MenuItem>
+            </Menu>
+            <InkCanvas Name="ic"
                    EditingMode="None"
                    MouseLeftButtonDown="Ic_MouseLeftButtonDown"
                    MouseLeftButtonUp="Ic_MouseLeftButtonUp"
@@ -20,20 +39,6 @@
                    MouseMove="Ic_MouseMove"
                    KeyDown="Ic_KeyDown"
                    KeyUp="Ic_KeyUp" />
-        <Canvas>
-            <Button Canvas.Top="10"
-                    Canvas.Right="10"
-                    Padding="10,5"
-                    Content="Export SQL"
-                    Name="es"
-                    Click="Es_Click"/>
-            <Button Canvas.Right="10"
-                    Canvas.Bottom="10"
-                    Padding="10,5"
-                    MouseMove="Button_MouseMove"
-                    Content="Save"
-                    Name="sb"
-                    Click="Sb_Click" />
-        </Canvas>
+        </DockPanel>
     </Grid>
 </Window>

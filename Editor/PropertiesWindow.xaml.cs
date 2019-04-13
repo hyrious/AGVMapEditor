@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -146,8 +147,8 @@ namespace Editor {
         }
 
         private void UpId_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (UpId.SelectedItem == null || Coord_ == null) return;
-            if (UpId.SelectedIndex == 0)
+            if (Coord_ == null) return;
+            if (UpId.SelectedItem == null || UpId.SelectedIndex == 0)
                 Coord_.Up = null;
             else
                 Coord_.Up = Map.Find(c => c.Id == Ids[UpId.SelectedIndex - 1]);
@@ -173,8 +174,8 @@ namespace Editor {
         }
 
         private void DownId_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (DownId.SelectedItem == null || Coord_ == null) return;
-            if (DownId.SelectedIndex == 0)
+            if (Coord_ == null) return;
+            if (DownId.SelectedItem == null || DownId.SelectedIndex == 0)
                 Coord_.Down = null;
             else
                 Coord_.Down = Map.Find(c => c.Id == Ids[DownId.SelectedIndex - 1]);
@@ -200,8 +201,8 @@ namespace Editor {
         }
 
         private void LeftId_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (LeftId.SelectedItem == null || Coord_ == null) return;
-            if (LeftId.SelectedIndex == 0)
+            if (Coord_ == null) return;
+            if (LeftId.SelectedItem == null || LeftId.SelectedIndex == 0)
                 Coord_.Left = null;
             else
                 Coord_.Left = Map.Find(c => c.Id == Ids[LeftId.SelectedIndex - 1]);
@@ -227,8 +228,8 @@ namespace Editor {
         }
 
         private void RightId_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (RightId.SelectedItem == null || Coord_ == null) return;
-            if (RightId.SelectedIndex == 0)
+            if (Coord_ == null) return;
+            if (RightId.SelectedItem == null || RightId.SelectedIndex == 0)
                 Coord_.Right = null;
             else
                 Coord_.Right = Map.Find(c => c.Id == Ids[RightId.SelectedIndex - 1]);
@@ -251,6 +252,34 @@ namespace Editor {
             if (Coord_ == null) return;
             Coord_.M_Right &= 0b01111110;
             Coord_.M_Right |= RightPose.SelectedIndex;
+        }
+
+        private void UpId_TextChanged(object sender, TextChangedEventArgs e) {
+            if (UpId.SelectedIndex == -1 && UpId.Text != String.Empty) {
+                MessageBox.Show("Invalid Id: Not exist");
+                UpId.Text = String.Empty;
+            }
+        }
+
+        private void DownId_TextChanged(object sender, TextChangedEventArgs e) {
+            if (DownId.SelectedIndex == -1 && DownId.Text != String.Empty) {
+                MessageBox.Show("Invalid Id: Not exist");
+                DownId.Text = String.Empty;
+            }
+        }
+
+        private void LeftId_TextChanged(object sender, TextChangedEventArgs e) {
+            if (LeftId.SelectedIndex == -1 && LeftId.Text != String.Empty) {
+                MessageBox.Show("Invalid Id: Not exist");
+                LeftId.Text = String.Empty;
+            }
+        }
+
+        private void RightId_TextChanged(object sender, TextChangedEventArgs e) {
+            if (RightId.SelectedIndex == -1 && RightId.Text != String.Empty) {
+                MessageBox.Show("Invalid Id: Not exist");
+                RightId.Text = String.Empty;
+            }
         }
     }
 }
