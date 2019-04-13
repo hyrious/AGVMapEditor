@@ -91,14 +91,17 @@ namespace Editor {
 
         private List<Coord> Map;
         private int[] Ids;
+        private bool Guard = false;
 
         public void LoadMap(List<Coord> map) {
             Map = map;
             Ids = map.Select(c => c.Id).ToArray();
+            Guard = true;
             FillIds(Ids, UpId);
             FillIds(Ids, DownId);
             FillIds(Ids, LeftId);
             FillIds(Ids, RightId);
+            Guard = false;
         }
 
         private static void FillIds(IEnumerable<int> ids, ComboBox comboBox) {
@@ -147,7 +150,7 @@ namespace Editor {
         }
 
         private void UpId_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (Coord_ == null) return;
+            if (Guard || Coord_ == null) return;
             if (UpId.SelectedItem == null || UpId.SelectedIndex == 0)
                 Coord_.Up = null;
             else
@@ -174,7 +177,7 @@ namespace Editor {
         }
 
         private void DownId_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (Coord_ == null) return;
+            if (Guard || Coord_ == null) return;
             if (DownId.SelectedItem == null || DownId.SelectedIndex == 0)
                 Coord_.Down = null;
             else
@@ -201,7 +204,7 @@ namespace Editor {
         }
 
         private void LeftId_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (Coord_ == null) return;
+            if (Guard || Coord_ == null) return;
             if (LeftId.SelectedItem == null || LeftId.SelectedIndex == 0)
                 Coord_.Left = null;
             else
@@ -228,7 +231,7 @@ namespace Editor {
         }
 
         private void RightId_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (Coord_ == null) return;
+            if (Guard || Coord_ == null) return;
             if (RightId.SelectedItem == null || RightId.SelectedIndex == 0)
                 Coord_.Right = null;
             else

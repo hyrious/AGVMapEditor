@@ -107,7 +107,7 @@ namespace Editor {
         ";
 
         public string ToSql => $@"insert into coords values (
-            {Id}, {(int)X}, {(int)Y}, {(I << 16) | J},
+            {Id}, {(int)X}, {(int)Y}, {I * 10000 + J},
             {UpId}, {(M_Up & 0b01110000) >> 4}, {(M_Up & 0b00001110) >> 1}, {(M_Up & 0b00000001)},
             {DownId}, {(M_Down & 0b01110000) >> 4}, {(M_Down & 0b00001110) >> 1}, {(M_Down & 0b00000001)},
             {LeftId}, {(M_Left & 0b01110000) >> 4}, {(M_Left & 0b00001110) >> 1}, {(M_Left & 0b00000001)},
