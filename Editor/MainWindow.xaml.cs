@@ -83,14 +83,14 @@ namespace Editor {
 
         public static string ToTableSql => $@"
             create table if not exists coords (
-                id                integer primary key, -- start from 1
-                x                 integer default 0,   -- unit: mm
+                id                integer primary key,
+                x                 integer default 0,
                 y                 integer default 0,
-                position_barcode  integer default 0,   -- struct {{ short i = Y, short j = X }}
-                up_point_id       integer default 0,   -- 0 is null
-                up_check1_mode    integer default 0,   -- 1..7, 0 is illegal
-                up_check2_mode    integer default 0,   -- 1..7, 0 is illegal
-                up_pose           integer default 0,   -- 0 前进, 1 后退
+                position_barcode  integer default 0,
+                up_point_id       integer default 0,
+                up_check1_mode    integer default 0,
+                up_check2_mode    integer default 0,
+                up_pose           integer default 0,
                 down_point_id     integer default 0,
                 down_check1_mode  integer default 0,
                 down_check2_mode  integer default 0,
@@ -103,7 +103,7 @@ namespace Editor {
                 right_check1_mode integer default 0,
                 right_check2_mode integer default 0,
                 right_pose        integer default 0
-            ); -- int[][20]; // 0.0
+            );
         ";
 
         public string ToSql => $@"insert into coords values (
@@ -300,6 +300,8 @@ namespace Editor {
         private void Window_Loaded(object sender, RoutedEventArgs e) {
             ic.Children.Add(HLine);
             ic.Children.Add(VLine);
+            ic.Children.Add(DummyLine);
+            ic.Children.Add(DummyMark);
             PropertiesWindow = new PropertiesWindow { Owner = this };
             Open_Click(sender, e);
         }
@@ -496,34 +498,99 @@ Press Right Button: Drag Canvas");
                 n.Header = "#";
         }
 
-        private void Ic_MouseRightButtonDown(object sender, MouseButtonEventArgs e) => IsPressingRight = true;
+        private void Ic_MouseRightButtonDown(object sender, MouseButtonEventArgs e) {
+            IsPressingRight = true;
+            Cur = null;
+            foreach (Coord c in Map) {
+                if (c.X - 5 <= CurX && CurX <= c.X + 5 &&
+                    c.Y - 5 <= CurY && CurY <= c.Y + 5) {
+                    Cur = c;
+                    break;
+                }
+            }
+            LastCur = Cur;
+        }
 
-        private void Ic_MouseRightButtonUp(object sender, MouseButtonEventArgs e) => IsPressingRight = false;
+        private void Ic_MouseRightButtonUp(object sender, MouseButtonEventArgs e) {
+            IsPressingRight = false;
+            DummyLine.Visibility = Visibility.Hidden;
+            DummyMark.Visibility = Visibility.Hidden;
+            if (LastCur != null) {
+                Cur = null;
+                foreach (Coord c in Map) {
+                    if (c.X - 5 <= CurX && CurX <= c.X + 5 &&
+                        c.Y - 5 <= CurY && CurY <= c.Y + 5) {
+                        Cur = c;
+                        break;
+                    }
+                }
+                if (Cur != null && Cur != LastCur) {
+                    double dx = Cur.X - LastCur.X,
+                           dy = Cur.Y - LastCur.Y;
+                    switch (GuessDirection(dx, dy)) {
+                        case 2: LastCur.Down = Cur; break;
+                        case 4: LastCur.Left = Cur; break;
+                        case 6: LastCur.Right = Cur; break;
+                        case 8: LastCur.Up = Cur; break;
+                        default: break;
+                    }
+                }
+            }
+        }
+
+        private static Line MakeDefaultLine() => new Line {
+            Stroke = Brushes.Black,
+            StrokeThickness = 2,
+            Visibility = Visibility.Hidden
+        };
+
+        private static Polyline MakeDefaultMark() => new Polyline {
+            Stroke = Brushes.Black,
+            StrokeThickness = 2,
+            Visibility = Visibility.Hidden
+        };
+
+        private Line DummyLine = MakeDefaultLine();
+        private Polyline DummyMark = MakeDefaultMark();
+        private int DummyDirection = 0;
 
         private void Ic_MouseMove(object sender, MouseEventArgs e) {
             Point pos = e.GetPosition(ic);
             double x = pos.X, y = pos.Y;
+            if (!IsPressingCtrl) {
+                foreach (Coord c in Map) {
+                    if (c == Cur) continue;
+                    double cx = c.X + OffsetX, cy = c.Y + OffsetY;
+                    if (cx - 5 <= x && x <= cx + 5) x = cx;
+                    if (cy - 5 <= y && y <= cy + 5 && x != c.X) y = cy;
+                }
+            }
+            CurX = x - OffsetX; CurY = y - OffsetY;
             if (IsPressingRight) {
                 HLine.Hide();
                 VLine.Hide();
-                if (Double.IsNaN(LastX)) {
-                    LastX = x; LastY = y;
+                if (LastCur == null) {
+                    if (Double.IsNaN(LastX)) {
+                        LastX = x; LastY = y;
+                    } else {
+                        OffsetX += x - LastX;
+                        OffsetY += y - LastY;
+                        LastX = x; LastY = y;
+                    }
                 } else {
-                    OffsetX += x - LastX;
-                    OffsetY += y - LastY;
-                    LastX = x; LastY = y;
+                    if (Double.IsNaN(LastX)) {
+                        LastX = x; LastY = y;
+                    } else {
+                        DummyLine.Visibility = Visibility.Visible;
+                        DummyMark.Visibility = Visibility.Visible;
+                        double dx = x - LastX,
+                               dy = y - LastY;
+                        DummyDirection = GuessDirection(dx, dy);
+                        UpdateDummyArrow(x, y);
+                    }
                 }
             } else {
                 LastX = Double.NaN; LastY = Double.NaN;
-                if (!IsPressingCtrl) {
-                    foreach (Coord c in Map) {
-                        if (c == Cur) continue;
-                        double cx = c.X + OffsetX, cy = c.Y + OffsetY;
-                        if (cx - 5 <= x && x <= cx + 5) x = cx;
-                        if (cy - 5 <= y && y <= cy + 5 && x != c.X) y = cy;
-                    }
-                }
-                CurX = x - OffsetX; CurY = y - OffsetY;
                 HLine.MoveTo(0, y, ic.ActualWidth, y);
                 VLine.MoveTo(x, 0, x, ic.ActualHeight);
                 if (e.LeftButton == MouseButtonState.Pressed) {
@@ -544,6 +611,41 @@ Press Right Button: Drag Canvas");
                 c.Update(ic, OffsetX, OffsetY);
                 if (LastCur != null)
                     LastCur.Dot.Stroke = Brushes.Red;
+            }
+        }
+
+        private void UpdateDummyArrow(double x, double y) {
+            DummyLine.MoveTo(LastCur.X + OffsetX, LastCur.Y + OffsetY, x, y);
+            DummyMark.Points.Clear();
+            switch (DummyDirection) {
+                case 8:
+                    DummyMark.Points.Add(new Point(x - 6, y + 10));
+                    DummyMark.Points.Add(new Point(x, y));
+                    DummyMark.Points.Add(new Point(x + 6, y + 10));
+                    break;
+                case 2:
+                    DummyMark.Points.Add(new Point(x + 6, y - 10));
+                    DummyMark.Points.Add(new Point(x, y));
+                    DummyMark.Points.Add(new Point(x - 6, y - 10));
+                    break;
+                case 4:
+                    DummyMark.Points.Add(new Point(x + 10, y + 6));
+                    DummyMark.Points.Add(new Point(x, y));
+                    DummyMark.Points.Add(new Point(x + 10, y - 6));
+                    break;
+                case 6:
+                    DummyMark.Points.Add(new Point(x - 10, y - 6));
+                    DummyMark.Points.Add(new Point(x, y));
+                    DummyMark.Points.Add(new Point(x - 10, y + 6));
+                    break;
+            }
+        }
+
+        private int GuessDirection(double dx, double dy) {
+            if (Math.Abs(dx) > Math.Abs(dy)) {
+                return dx > 0 ? 6 : 4;
+            } else {
+                return dy > 0 ? 2 : 8;
             }
         }
 
