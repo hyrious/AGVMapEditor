@@ -4,6 +4,10 @@
 
 ![screenshot](Report/assets/mainview.png)
 
+## 编译
+
+由于使用了 C# 7.0，请使用 VS 2017 或以上进行编译。
+
 ## 操作方法
 
 行为|功能
