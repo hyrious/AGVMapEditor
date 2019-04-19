@@ -363,7 +363,7 @@ namespace Editor {
         }
 
         private void About_Click(object sender, RoutedEventArgs e) {
-            MessageBox.Show("AGV Map Editor\n\n" +
+            MessageBox.Show($"AGV Map Editor 1.0\n\n" +
                 "Copyright @hyrious 2019\n" +
                 "https://github.com/hyrious/AGVMapEditor", "AGV Map Editor");
         }
@@ -372,7 +372,7 @@ namespace Editor {
             MessageBox.Show(@"Left Button: Select/Drag
 Double Click: New Point/Open Properties Window
 Press Ctrl: No Alignment
-Press Right Button: Drag Canvas");
+Press Right Button: Drag Canvas/Create Arrow");
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e) {
