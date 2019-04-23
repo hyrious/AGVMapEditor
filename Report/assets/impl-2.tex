@@ -1,0 +1,40 @@
+% !TEX program = xelatex
+% !TeX encoding = UTF-8
+% Copyright 2019 hyrious <hyrious@outlook.com>
+\documentclass[tikz]{standalone}
+\usepackage{ctex,tikz}
+\usetikzlibrary{shapes,arrows}
+\begin{document}
+  \tikzstyle{startstop} = [rectangle, rounded corners, text centered, draw=black, fill=red!30, minimum width=3cm, minimum height=1cm]
+  \tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110,text centered, draw=black, fill=blue!30, minimum width=3cm, minimum height=1cm]
+  \tikzstyle{process} = [rectangle, text centered, draw=black, fill=orange!30, minimum width=3cm, minimum height=1cm]
+  \tikzstyle{decision} = [diamond, text centered, draw=black, fill=green!30, minimum width=3cm, minimum height=1cm]
+  \tikzstyle{to} = [->,>=stealth',shorten >=1pt,thick,font=\sffamily\footnotesize]
+
+  \begin{tikzpicture}[node distance=1cm,font=\footnotesize\sffamily,
+    every matrix/.style={ampersand replacement=\&,column sep=1cm,row sep=1cm}]
+    \matrix{
+      \& \node[startstop] (start) {{开始}}; \\
+      \& \node[process] (proc) {{处理不按 Ctrl 时对齐光标}}; \\
+      \& \node[decision] (cond1) {{是否在按右键}}; \\
+      \& \node[decision] (cond2) {{是否选中点}};
+      \& \node[decision] (cond3) {{是否选中点}}; \\
+         \node[process] (proc1) {{更新临时箭头位置}};
+      \& \node[process] (proc2) {{更新画布位置}};
+      \& \node[process] (proc3) {{更新选中点位置}}; \\
+      \& \node[process] (proc5) {{更新画面}}; \\
+      \& \node[startstop] (stop) {{结束}}; \\
+    };
+    \draw[to] (start) -- (proc);
+    \draw[to] (proc) -- (cond1);
+    \draw[to] (cond1) -- node[right] {{是}} (cond2);
+    \draw[to] (cond1) -| node[above] {{否}} (cond3);
+    \draw[to] (cond2) -| node[above] {{是}} (proc1);
+    \draw[to] (cond2) -- node[right] {{否}} (proc2);
+    \draw[to] (cond3) -- node[right] {{是}} (proc3);
+    \draw[to] (proc1) |- (proc5);
+    \draw[to] (proc2) -- (proc5);
+    \draw[to] (proc3) |- (proc5);
+    \draw[to] (proc5) -- (stop);
+  \end{tikzpicture}
+\end{document}

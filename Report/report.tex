@@ -28,7 +28,9 @@
   \fancyhf{}
   \fancyhead[C]{\ttfamily\zihao{-5}{\thetitle}}
   \fancyfoot[C]{\ttfamily\zihao{-5}\thepage}
-  \setlength{\headheight}{15pt}
+  \setlength{\voffset}{-1in}
+  \setlength{\topmargin}{1.2cm}
+  \setlength{\headheight}{9pt}
   \renewcommand{\headrulewidth}{0.4pt}
   \renewcommand{\footrulewidth}{0pt}
 }
@@ -72,6 +74,7 @@
     keywordstyle=\color{cyan}
 }
 \usepackage{lipsum}
+\usepackage{layout}
 
 \begin{document}
 
@@ -110,7 +113,8 @@
 
 \input{6-conc}
 
-\bibliographystyle{IEEEtran}
+\nocite{*}
+\bibliographystyle{plain}
 \bibliography{cites}
 \addcontentsline{toc}{chapter}{{参考文献}}
 

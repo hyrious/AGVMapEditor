@@ -1,6 +1,6 @@
 % !TeX root = ./report.tex
 
-本章将对 AGV 地图编辑器的功能进行详细的说明，将展示本软件完成的图例以及相应的代码说明。
+本章将对 AGV 地图编辑器的功能进行详细的说明，将展示本软件完成的图例以及相应的流程、代码说明。
 
 \begin{figure}[H]
   \centering
@@ -8,77 +8,6 @@
   \caption{软件主界面}
   \label{fig:mainview}
 \end{figure}
-
-部分相关布局代码：
-
-\begin{lstlisting}[language=XML]
-<Window>
-    <Grid>
-        <DockPanel>
-            <Menu> ... </Menu>
-            <InkCanvas EditingMode="None" />
-        </DockPanel>
-    </Grid>
-</Window>
-\end{lstlisting}
-
-\begin{lstlisting}[language=XML]
-<Window>
-    <StackPanel Margin="2">
-        <WrapPanel Grid.ColumnSpan="2">
-            <Label Content="Y" />
-            <TextBox Name="X" TextChanged="X_TextChanged" />
-            <Label Content="X" />
-            <TextBox Name="Y" TextChanged="Y_TextChanged" />
-            <Label Content="PositionBarcode (" />
-            <TextBox Name="I" TextChanged="I_TextChanged" />
-            <Label Content=", " />
-            <TextBox Name="J" TextChanged="J_TextChanged" />
-            <Label Content=")" />
-        </WrapPanel>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Content="Up" />
-            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" Margin="2">
-                <Label Content="Id" />
-                <ComboBox Name="UpId" SelectionChanged="UpId_SelectionChanged" >
-                    <ComboBoxItem Content="" />
-                </ComboBox>
-                <Label Content="Check1Mode" />
-                <ComboBox Name="UpCheck1Mode" SelectionChanged="UpCheck1Mode_SelectionChanged">
-                    <ComboBoxItem Content="" />
-                    <ComboBoxItem Content="1" />
-                    <ComboBoxItem Content="2" />
-                    <ComboBoxItem Content="3" />
-                    <ComboBoxItem Content="4" />
-                    <ComboBoxItem Content="5" />
-                    <ComboBoxItem Content="6" />
-                    <ComboBoxItem Content="7" />
-                </ComboBox>
-                <Label Content="Check2Mode" />
-                <ComboBox Name="UpCheck2Mode" SelectionChanged="UpCheck2Mode_SelectionChanged">
-                  <!-- same as check1mode -->
-                </ComboBox>
-                <Label Content="Pose" />
-                <ComboBox Name="UpPose" SelectionChanged="UpPose_SelectionChanged">
-                    <ComboBoxItem Content="0" />
-                    <ComboBoxItem Content="1" />
-                </ComboBox>
-            </StackPanel>
-            <!-- other rows -->
-        </Grid>
-    </StackPanel>
-</Window>
-\end{lstlisting}
 
 \section{启动}
 
@@ -93,7 +22,7 @@
 
 \section{创建坐标点}
 
-移动鼠标，可以看到两条虚线分别对齐到鼠标的 XY 坐标上。此时在某一空白处双击即可创建新的坐标点。
+移动鼠标，可以看到两条虚线分别对齐到鼠标的 XY 坐标上。此时在某一空白处双击即可在对应位置创建新的坐标点。
 
 \begin{figure}[H]
   \centering
@@ -102,117 +31,80 @@
   \label{fig:dbclick}
 \end{figure}
 
-坐标点的 ID 是自动分配的，不可以修改；XY 坐标赋值为鼠标位置，剩下的属性全都默认赋值为 0。
+坐标点的 ID 是自动分配的，不可以修改；XY 坐标赋值为鼠标位置，剩下的属性全都默认赋值为 0。坐标点被选中时，颜色变为红色。
 
 相关代码：
 
 \begin{lstlisting}[language=cs]
 private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
-    if (/* click on the blank space */) {
+    if (/* 是在空白处按下的 */) {
         Map.Add(Cur = new Coord { X = CurX, Y = CurY });
         foreach (Coord c in Map) c.Update(ic, OffsetX, OffsetY);
         NeedSync = true;
     }
-    // ... other stuff ...
+    // ... 其他逻辑 ...
 }
 \end{lstlisting}
 
 \section{删除坐标点}
 
-按下 \texttt{Delete} 即可删除当前被选中的坐标点，但用掉的编号不会再次变得可用。
+按下 \texttt{Delete} 或通过菜单上的 Edit-Delete 即可删除当前被选中的坐标点，但用掉的编号不会再次变得可用。
+
+基本流程图：
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.2\textwidth]{assets/impl-1.pdf}
+    \caption{删除坐标点流程}
+    \label{fig:impl-1}
+\end{figure}
 
 相关代码：
 
 \begin{lstlisting}[language=cs]
 private void Ic_KeyUp(object sender, KeyEventArgs e) {
     if (e.Key == Key.Delete) {
-        if (/* there be active point */) {
+        if (/* 当前有点被选中 */) {
+            // 删除该点（数据)
             Map.Remove(LastCur);
+            // 删除与这个点相连的箭头
             foreach (Coord c in Map) {
                 if (c.Up == LastCur) c.Up = null;
                 if (c.Down == LastCur) c.Down = null;
                 if (c.Left == LastCur) c.Left = null;
                 if (c.Right == LastCur) c.Right = null;
             }
+            // 删除该点（视图)
             LastCur.Remove(ic);
             LastCur = Cur = null;
             NeedSync = true;
         }
         RefreshMap();
     }
-    // ... other stuff ...
+    // ... 其他逻辑 ...
 }
 \end{lstlisting}
 
 \section{拖动坐标点}
 
-直接在某个坐标点上按下鼠标左键，然后拖动即可，该点的 XY 坐标会跟着改变。默认情况下，拖动时会自动``吸附''到其他坐标点的四方向上，这时按住 Ctrl 可以取消吸附。代码中也体现了这一点。
+直接在某个坐标点上按下鼠标左键，然后拖动即可，该点的 XY 坐标会跟着改变。默认情况下，拖动时会自动``吸附''到其他坐标点的四方向上，这时按住 Ctrl 可以取消吸附。
 
-相关代码：
+\section{创建箭头}
 
-\begin{lstlisting}[language=cs]
-private void Ic_MouseMove(object sender, MouseEventArgs e) {
-    Point pos = e.GetPosition(ic);
-    double x = pos.X, y = pos.Y;
-    if (IsPressingRight) {
-        // ... other stuff ...
-    } else {
-        LastX = Double.NaN; LastY = Double.NaN;
-        if (!IsPressingCtrl) {
-            foreach (Coord c in Map) {
-                if (c == Cur) continue;
-                double cx = c.X + OffsetX, cy = c.Y + OffsetY;
-                if (cx - 5 <= x && x <= cx + 5) x = cx;
-                if (cy - 5 <= y && y <= cy + 5 && x != c.X) y = cy;
-            }
-        }
-        CurX = x - OffsetX; CurY = y - OffsetY;
-        HLine.MoveTo(0, y, ic.ActualWidth, y);
-        VLine.MoveTo(x, 0, x, ic.ActualHeight);
-        if (e.LeftButton == MouseButtonState.Pressed) {
-            HLine.Hide();
-            VLine.Hide();
-            if (Cur != null && !PropertiesWindow.IsVisible) {
-                Cur.X = CurX;
-                Cur.Y = CurY;
-                NeedSync = true;
-            }
-        } else {
-            Cur = null;
-            HLine.Show();
-            VLine.Show();
-        }
-    }
-    foreach (Coord c in Map) c.Update(ic, OffsetX, OffsetY);
-}
-\end{lstlisting}
+在某一坐标点上按住鼠标右键然后拖动到另一个坐标点上，就会创建出对应的箭头。不可以从自己拖动到自己。
 
 \section{拖动画布}
 
-按住鼠标右键然后拖动，整个画布会跟着一起移动，但是坐标点的坐标并不会改变。
+在空白处按住鼠标右键然后拖动，整个画布会跟着一起移动。
 
-相关代码：
+以上三个功能都涉及到鼠标移动，因此代码细节上我们选择将其实现在一起，其流程大致如下：
 
-\begin{lstlisting}[language=cs]
-private void Ic_MouseMove(object sender, MouseEventArgs e) {
-    Point pos = e.GetPosition(ic);
-    double x = pos.X, y = pos.Y;
-    if (IsPressingRight) {
-        HLine.Hide();
-        VLine.Hide();
-        if (Double.IsNaN(LastX)) {
-            LastX = x; LastY = y;
-        } else {
-            OffsetX += x - LastX;
-            OffsetY += y - LastY;
-            LastX = x; LastY = y;
-        }
-    } else {
-        // ... other stuff ...
-    }
-    foreach (Coord c in Map) c.Update(ic, OffsetX, OffsetY);
-}
-\end{lstlisting}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{assets/impl-2.pdf}
+    \caption{移动鼠标时触发的流程}
+    \label{fig:impl-2}
+\end{figure}
 
 \section{修改坐标点属性}
 
@@ -243,6 +135,7 @@ private void Ic_MouseMove(object sender, MouseEventArgs e) {
 \begin{lstlisting}[language=cs]
 public Coord Coord {
     get => Coord_;
+    // 读取坐标点数据到界面上
     set {
         Coord_ = null;
         X.Text = ((int)value.X).ToString();
@@ -262,7 +155,7 @@ public Coord Coord {
         } else {
             UpId.SelectedIndex = 0;
         }
-        // down, left, right
+        // ... 其他方向 ...
         Coord_ = value;
     }
 }
@@ -270,6 +163,7 @@ public Coord Coord {
 private List<Coord> Map;
 private int[] Ids;
 
+// 更新界面数据到坐标点本身
 private void X_TextChanged(object sender, TextChangedEventArgs e) {
     if (Coord_ == null) return;
     if (Int32.TryParse(X.Text, out int _x)) {
@@ -279,16 +173,7 @@ private void X_TextChanged(object sender, TextChangedEventArgs e) {
     }
 }
 
-private void Y_TextChanged(object sender, TextChangedEventArgs e) {
-    if (Coord_ == null) return;
-    if (Int32.TryParse(Y.Text, out int _y)) {
-        Coord_.Y = _y;
-    } else {
-        Y.Text = ((int)Coord_.Y).ToString();
-    }
-}
-
-// other fields...
+// 其他控件事件代码...
 \end{lstlisting}
 
 篇幅有限，代码均做了大量精简。
@@ -308,13 +193,16 @@ private void Y_TextChanged(object sender, TextChangedEventArgs e) {
 
 \begin{lstlisting}[language=cs]
 private void Sb_Click(object sender, RoutedEventArgs e) {
+    // 生成部分必要数据
     foreach (Coord c in Map) c.UpdateNeighbours();
-    using (LiteDatabase db = new LiteDatabase("./MapData.db")) {
+    // 写入数据库文件
+    using (LiteDatabase db = new LiteDatabase(FileName)) {
         db.DropCollection("map");
         LiteCollection<Coord> map = db.GetCollection<Coord>("map");
         map.EnsureIndex(c => c.Id);
         map.InsertBulk(Map);
     }
+    // 提示已保存
     MessageBox.Show("Saved");
     NeedSync = false;
 }
@@ -331,38 +219,46 @@ private void Sb_Click(object sender, RoutedEventArgs e) {
   \label{fig:export}
 \end{figure}
 
-按确定后会在目标位置生成 SQL 文件，里面包含了创建和插入表的 SQL 语句。
+按确定后会在目标位置生成 SQL 文件，里面包含了创建和插入表的 SQL 语句。各个数据库的 SQL 是不一样的，这里选择生成的是 Sqlite 语法的 SQL，由于其简单的数据类型等特性，将其通过文本替换等方式直接转成其他数据库支持的 SQL 是相对容易的。
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.5\textwidth]{assets/sql.png}
-  \caption{SQL 文件内容}
+  \caption{SQL 文件内容预览}
   \label{fig:sql}
 \end{figure}
 
 部分相关代码：
 
 \begin{lstlisting}[language=cs]
+// 生成一条插入语句
 public string ToSql => $@"insert into coords values (
     {Id}, {(int)X}, {(int)Y}, {I * 10000 + J},
-    {UpId}, {(M_Up & 0b01110000) >> 4}, {(M_Up & 0b00001110) >> 1}, {(M_Up & 0b00000001)},
-    {DownId}, {(M_Down & 0b01110000) >> 4}, {(M_Down & 0b00001110) >> 1}, {(M_Down & 0b00000001)},
-    {LeftId}, {(M_Left & 0b01110000) >> 4}, {(M_Left & 0b00001110) >> 1}, {(M_Left & 0b00000001)},
-    {RightId}, {(M_Right & 0b01110000) >> 4}, {(M_Right & 0b00001110) >> 1}, {(M_Right & 0b00000001)}
+    {UpId}, {(M_Up & 0b01110000) >> 4},
+    {(M_Up & 0b00001110) >> 1}, {(M_Up & 0b00000001)},
+    {DownId}, {(M_Down & 0b01110000) >> 4},
+    {(M_Down & 0b00001110) >> 1}, {(M_Down & 0b00000001)},
+    {LeftId}, {(M_Left & 0b01110000) >> 4},
+    {(M_Left & 0b00001110) >> 1}, {(M_Left & 0b00000001)},
+    {RightId}, {(M_Right & 0b01110000) >> 4},
+    {(M_Right & 0b00001110) >> 1}, {(M_Right & 0b00000001)}
 )";
 
 private void Es_Click(object sender, RoutedEventArgs e) {
+    // 拼接 SQL 代码
     StringBuilder builder = new StringBuilder(Coord.ToTableSql);
     foreach (Coord c in Map) {
         builder.Append(c.ToSql);
         builder.Append(';');
     }
     string result = builder.ToString();
+    // 询问保存位置
     SaveFileDialog dialog = new SaveFileDialog {
         FileName = "coords",
         DefaultExt = ".sql",
         Filter = "SQL File (.sql)|*.sql|Text documents (.txt)|*.txt"
     };
+    // 如果确认保存，写入文本文件
     if (dialog.ShowDialog() == true) {
         File.WriteAllText(dialog.FileName, result);
     }
