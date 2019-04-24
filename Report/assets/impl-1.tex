@@ -1,0 +1,28 @@
+% !TEX program = xelatex
+% !TeX encoding = UTF-8
+% Copyright 2019 hyrious <hyrious@outlook.com>
+\documentclass[tikz]{standalone}
+\usepackage{ctex,tikz}
+\usetikzlibrary{shapes,arrows}
+\begin{document}
+  \tikzstyle{startstop} = [rectangle, rounded corners, text centered, draw=black, fill=red!30, minimum width=3cm, minimum height=1cm]
+  \tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110,text centered, draw=black, fill=blue!30, minimum width=3cm, minimum height=1cm]
+  \tikzstyle{process} = [rectangle, text centered, draw=black, fill=orange!30, minimum width=3cm, minimum height=1cm]
+  \tikzstyle{decision} = [diamond, text centered, draw=black, fill=green!30, minimum width=3cm, minimum height=1cm]
+  \tikzstyle{to} = [->,>=stealth',shorten >=1pt,thick,font=\sffamily\footnotesize]
+
+  \begin{tikzpicture}[node distance=1cm,font=\footnotesize\sffamily,
+    every matrix/.style={ampersand replacement=\&,column sep=1cm,row sep=1cm}]
+    \matrix{
+      \node[startstop] (start) {{开始}}; \\
+      \node[process] (proc1) {{从数据中删除该点}}; \\
+      \node[process] (proc2) {{删除与这个点相连的箭头}}; \\
+      \node[process] (proc3) {{从画布中删除该点}}; \\
+      \node[startstop] (stop) {{结束}}; \\
+    };
+    \draw[to] (start) -- (proc1);
+    \draw[to] (proc1) -- (proc2);
+    \draw[to] (proc2) -- (proc3);
+    \draw[to] (proc3) -- (stop);
+  \end{tikzpicture}
+\end{document}
