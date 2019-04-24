@@ -62,6 +62,7 @@ namespace Editor {
         };
 
         public int Id { get; set; } = ++Id_;
+        public override bool Equals(object obj) => obj is Coord rhs ? rhs.Id == Id : false;
         public double X { get; set; }
         public double Y { get; set; } // for convenience, still saved as int
         public int I { get; set; }
@@ -597,8 +598,7 @@ Press Right Button: Drag Canvas/Create Arrow");
                     HLine.Hide();
                     VLine.Hide();
                     if (Cur != null && !PropertiesWindow.IsVisible) {
-                        Cur.X = CurX;
-                        Cur.Y = CurY;
+                        MoveCur();
                         NeedSync = true;
                     }
                 } else {
@@ -612,6 +612,18 @@ Press Right Button: Drag Canvas/Create Arrow");
                 if (LastCur != null)
                     LastCur.Dot.Stroke = Brushes.Red;
             }
+        }
+
+        private void MoveCur() {
+            double dx = CurX - Cur.X, dy = CurY - Cur.Y;
+            RecurUpdateNextCoords(Cur, dx, dy);
+        }
+
+        private void RecurUpdateNextCoords(Coord cur, double dx, double dy) {
+            cur.X += dx;
+            cur.Y += dy;
+            if (cur.Right != null) RecurUpdateNextCoords(cur.Right, dx, dy);
+            if (cur.Down != null) RecurUpdateNextCoords(cur.Down, dx, dy);
         }
 
         private void UpdateDummyArrow(double x, double y) {
