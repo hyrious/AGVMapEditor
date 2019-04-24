@@ -82,6 +82,8 @@ namespace Editor {
         public int M_Right { get; set; } // properties for each direction
         // [0|000|000|0]: 7: not use, 6-4: Check1Mode, 3-1: Check2Mode, 0: Pose
 
+        public override int GetHashCode() => base.GetHashCode();
+
         public static string ToTableSql => $@"
             create table if not exists coords (
                 id                integer primary key,
@@ -553,6 +555,9 @@ Press Right Button: Drag Canvas/Create Arrow");
 
         private Line DummyLine = MakeDefaultLine();
         private Polyline DummyMark = MakeDefaultMark();
+
+        private void S_Click(object sender, RoutedEventArgs e) => s.IsChecked ^= true;
+
         private int DummyDirection = 0;
 
         private void Ic_MouseMove(object sender, MouseEventArgs e) {
@@ -615,8 +620,13 @@ Press Right Button: Drag Canvas/Create Arrow");
         }
 
         private void MoveCur() {
-            double dx = CurX - Cur.X, dy = CurY - Cur.Y;
-            RecurUpdateNextCoords(Cur, dx, dy);
+            if (s.IsChecked) {
+                double dx = CurX - Cur.X, dy = CurY - Cur.Y;
+                RecurUpdateNextCoords(Cur, dx, dy);
+            } else {
+                Cur.X = CurX;
+                Cur.Y = CurY;
+            }
         }
 
         private void RecurUpdateNextCoords(Coord cur, double dx, double dy) {
