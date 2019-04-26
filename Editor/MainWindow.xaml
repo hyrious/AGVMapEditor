@@ -24,6 +24,7 @@
                     <MenuItem Header="#" IsEnabled="False" Name="n" />
                     <MenuItem Header="Edit _Properties" Click="Edit_Click" />
                     <MenuItem Header="_Delete" Click="Delete_Click" />
+                    <MenuItem Header="_Sync Next Points" Name="s" Click="S_Click" IsChecked="True" />
                 </MenuItem>
                 <MenuItem Header="_Help" Padding="5,2">
                     <MenuItem Header="_Content" Click="Help_Click" />

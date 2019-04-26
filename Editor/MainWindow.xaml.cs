@@ -62,6 +62,7 @@ namespace Editor {
         };
 
         public int Id { get; set; } = ++Id_;
+        public override bool Equals(object obj) => obj is Coord rhs ? rhs.Id == Id : false;
         public double X { get; set; }
         public double Y { get; set; } // for convenience, still saved as int
         public int I { get; set; }
@@ -80,6 +81,8 @@ namespace Editor {
         public int M_Left { get; set; }
         public int M_Right { get; set; } // properties for each direction
         // [0|000|000|0]: 7: not use, 6-4: Check1Mode, 3-1: Check2Mode, 0: Pose
+
+        public override int GetHashCode() => base.GetHashCode();
 
         public static string ToTableSql => $@"
             create table if not exists coords (
@@ -552,6 +555,9 @@ Press Right Button: Drag Canvas/Create Arrow");
 
         private Line DummyLine = MakeDefaultLine();
         private Polyline DummyMark = MakeDefaultMark();
+
+        private void S_Click(object sender, RoutedEventArgs e) => s.IsChecked ^= true;
+
         private int DummyDirection = 0;
 
         private void Ic_MouseMove(object sender, MouseEventArgs e) {
@@ -597,8 +603,7 @@ Press Right Button: Drag Canvas/Create Arrow");
                     HLine.Hide();
                     VLine.Hide();
                     if (Cur != null && !PropertiesWindow.IsVisible) {
-                        Cur.X = CurX;
-                        Cur.Y = CurY;
+                        MoveCur();
                         NeedSync = true;
                     }
                 } else {
@@ -612,6 +617,23 @@ Press Right Button: Drag Canvas/Create Arrow");
                 if (LastCur != null)
                     LastCur.Dot.Stroke = Brushes.Red;
             }
+        }
+
+        private void MoveCur() {
+            if (s.IsChecked) {
+                double dx = CurX - Cur.X, dy = CurY - Cur.Y;
+                RecurUpdateNextCoords(Cur, dx, dy);
+            } else {
+                Cur.X = CurX;
+                Cur.Y = CurY;
+            }
+        }
+
+        private void RecurUpdateNextCoords(Coord cur, double dx, double dy) {
+            cur.X += dx;
+            cur.Y += dy;
+            if (cur.Right != null) RecurUpdateNextCoords(cur.Right, dx, dy);
+            if (cur.Down != null) RecurUpdateNextCoords(cur.Down, dx, dy);
         }
 
         private void UpdateDummyArrow(double x, double y) {
