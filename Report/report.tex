@@ -5,12 +5,13 @@
 
 \documentclass[zihao=-4]{ctexrep}
 \ctexset{section/format+=\raggedright}
-\usepackage[a4paper,top=2cm,bottom=2cm,left=2.5cm,right=1.5cm]{geometry}
+\newcommand{\chaptertitleformat}[1]{#1}
+\usepackage[a4paper,top=3.3cm,bottom=2.7cm,left=2.75cm,right=2.75cm]{geometry}
 \usepackage{url}
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{fontspec}
-\setmainfont{Times Newer Roman}
+\setmainfont{Times New Roman}
 \setlength{\baselineskip}{22pt}
 \usepackage{hyperref}
 \usepackage{xcolor}
@@ -26,15 +27,14 @@
 \usepackage{fancyhdr}
 \fancypagestyle{plain}{
   \fancyhf{}
-  \fancyhead[C]{\ttfamily\zihao{-5}{\thetitle}}
+  \fancyhead[C]{\zihao{-5}{\thetitle}}
   \fancyfoot[C]{\ttfamily\zihao{-5}\thepage}
   \setlength{\voffset}{-1in}
-  \setlength{\topmargin}{1.2cm}
-  \setlength{\headheight}{9pt}
+  \setlength{\topmargin}{2.2cm}
+  \setlength{\headheight}{11pt}
   \renewcommand{\headrulewidth}{0.4pt}
   \renewcommand{\footrulewidth}{0pt}
 }
-\pagestyle{plain}
 \usepackage{color,listings}
 \definecolor{gray}{rgb}{0.4,0.4,0.4}
 \definecolor{darkblue}{rgb}{0.0,0.0,0.6}
@@ -73,15 +73,16 @@
     identifierstyle=\color{darkblue},
     keywordstyle=\color{cyan}
 }
-\usepackage{lipsum}
-\usepackage{layout}
+\usepackage{algorithm,algpseudocode}
+\newcommand{\var}[1]{{\ttfamily#1}}
 
+\pagestyle{plain}
 \begin{document}
 
 \tableofcontents
 
 \chapter*{摘要}
-
+\setcounter{page}{1}
 \input{abstract}
 
 \chapter*{前言}

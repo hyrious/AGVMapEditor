@@ -10,7 +10,7 @@
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\textwidth]{assets/serv.pdf}
+  \includegraphics[width=0.6\textwidth]{assets/serv.pdf}
   \caption{服务模型}
   \label{fig:serv}
 \end{figure}
@@ -19,12 +19,14 @@
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\textwidth]{assets/dataflow.pdf}
+  \includegraphics[width=0.6\textwidth]{assets/dataflow.pdf}
   \caption{数据流图}
   \label{fig:dataflow}
 \end{figure}
 
 \subsection{流程图}
+
+整个软件的流程图大致如下：
 
 \begin{figure}[H]
   \centering
@@ -66,20 +68,20 @@
   y & \texttt{integer} & 否 & （相对于画布的）Y 坐标 \\
   position\_barcode & \texttt{integer} & 否 & 坐标点二维码 \\
   up\_point\_id & \texttt{integer} & 是 & 指向上方的点的 \texttt{ID}，为空或 0 代表没有连线 \\
-  up\_check1\_mode & \texttt{integer} & 是 & 向上方运动时检测 1 的模式，取 1-7 七种 \\
-  up\_check2\_mode & \texttt{integer} & 是 & 向上方运动时检测 2 的模式，取 1-7 七种 \\
+  up\_check1\_mode & \texttt{integer} & 是 & 向上方运动时检测 1 的模式，共七种 \\
+  up\_check2\_mode & \texttt{integer} & 是 & 向上方运动时检测 2 的模式，共七种 \\
   up\_pose & \texttt{integer} & 是 & 向上方运动时的姿态，取 0、1 分别代表前进后退 \\
   down\_point\_id & \texttt{integer} & 是 & 指向下方的点的 \texttt{ID}，为空或 0 代表没有连线 \\
-  down\_check1\_mode & \texttt{integer} & 是 & 向下方运动时检测 1 的模式，取 1-7 七种 \\
-  down\_check2\_mode & \texttt{integer} & 是 & 向下方运动时检测 2 的模式，取 1-7 七种 \\
+  down\_check1\_mode & \texttt{integer} & 是 & 向下方运动时检测 1 的模式，共七种 \\
+  down\_check2\_mode & \texttt{integer} & 是 & 向下方运动时检测 2 的模式，共七种 \\
   down\_pose & \texttt{integer} & 是 & 向下方运动时的姿态，取 0、1 分别代表前进后退 \\
   left\_point\_id & \texttt{integer} & 是 & 指向左方的点的 \texttt{ID}，为空或 0 代表没有连线 \\
-  left\_check1\_mode & \texttt{integer} & 是 & 向左方运动时检测 1 的模式，取 1-7 七种 \\
-  left\_check2\_mode & \texttt{integer} & 是 & 向左方运动时检测 2 的模式，取 1-7 七种 \\
+  left\_check1\_mode & \texttt{integer} & 是 & 向左方运动时检测 1 的模式，共七种 \\
+  left\_check2\_mode & \texttt{integer} & 是 & 向左方运动时检测 2 的模式，共七种 \\
   left\_pose & \texttt{integer} & 是 & 向左方运动时的姿态，取 0、1 分别代表前进后退 \\
   right\_point\_id & \texttt{integer} & 是 & 指向右方的点的 \texttt{ID}，为空或 0 代表没有连线 \\
-  right\_check1\_mode & \texttt{integer} & 是 & 向右方运动时检测 1 的模式，取 1-7 七种 \\
-  right\_check2\_mode & \texttt{integer} & 是 & 向右方运动时检测 2 的模式，取 1-7 七种 \\
+  right\_check1\_mode & \texttt{integer} & 是 & 向右方运动时检测 1 的模式，共七种 \\
+  right\_check2\_mode & \texttt{integer} & 是 & 向右方运动时检测 2 的模式，共七种 \\
   right\_pose & \texttt{integer} & 是 & 向右方运动时的姿态，取 0、1 分别代表前进后退
 \end{longtabu}
 

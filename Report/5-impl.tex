@@ -87,7 +87,33 @@ private void Ic_KeyUp(object sender, KeyEventArgs e) {
 
 \section{拖动坐标点}
 
-直接在某个坐标点上按下鼠标左键，然后拖动即可，该点的 XY 坐标会跟着改变。默认情况下，拖动时会自动``吸附''到其他坐标点的四方向上，这时按住 Ctrl 可以取消吸附。
+直接在某个坐标点上按下鼠标左键，然后拖动即可，该点的 XY 坐标会跟着改变。如果勾上了 Edit-Sync Next Points（如图 \ref{fig:sync}），其指向的其他点也会跟着移动。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{assets/sync.png}
+  \caption{同步移动它指向的其他点}
+  \label{fig:sync}
+\end{figure}
+
+\subsection{拖动递归处理}
+
+\begin{algorithm}[htbp]
+  \caption{递归移动坐标点算法}
+  \begin{algorithmic}[1]
+    \Procedure{RecurUpdateNextCoords}{$cur, dx, dy$}\Comment{移动 cur 及它指向的其他点}
+    \State $cur.X \gets cur.X + dx$ and $cur.Y \gets cur.Y + dy$\Comment{移动当前点}
+    \If{$cur.Right$ 不为空}\Comment{递归处理右点}
+      \State RecurUpdateNextCoords($cur.Right, dx, dy$)
+    \EndIf
+    \If{$cur.Down$ 不为空}\Comment{递归处理下点}
+      \State RecurUpdateNextCoords($cur.Down, dx, dy$)
+    \EndIf
+    \EndProcedure
+  \end{algorithmic}
+\end{algorithm}
+
+默认情况下，拖动时会自动``吸附''到其他坐标点的四方向上，这时按住 Ctrl 可以取消吸附。
 
 \section{创建箭头}
 
@@ -101,7 +127,7 @@ private void Ic_KeyUp(object sender, KeyEventArgs e) {
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{assets/impl-2.pdf}
+    \includegraphics[width=0.8\textwidth]{assets/impl-2.pdf}
     \caption{移动鼠标时触发的流程}
     \label{fig:impl-2}
 \end{figure}
@@ -134,30 +160,30 @@ private void Ic_KeyUp(object sender, KeyEventArgs e) {
 
 \begin{lstlisting}[language=cs]
 public Coord Coord {
-    get => Coord_;
-    // 读取坐标点数据到界面上
-    set {
-        Coord_ = null;
-        X.Text = ((int)value.X).ToString();
-        Y.Text = ((int)value.Y).ToString();
-        I.Text = value.I.ToString();
-        J.Text = value.J.ToString();
-        if (value.Up != null) {
-            for (int i = 1; i < UpId.Items.Count; i++) {
-                if (Ids[i - 1] == value.Up.Id) {
-                    UpId.SelectedIndex = i;
-                    break;
-                }
-            }
-            UpCheck1Mode.SelectedIndex = (value.M_Up & 0b01110000) >> 4;
-            UpCheck2Mode.SelectedIndex = (value.M_Up & 0b00001110) >> 1;
-            UpPose.SelectedIndex = value.M_Up & 0b00000001;
-        } else {
-            UpId.SelectedIndex = 0;
+  get => Coord_;
+  // 读取坐标点数据到界面上
+  set {
+    Coord_ = null;
+    X.Text = ((int)value.X).ToString();
+    Y.Text = ((int)value.Y).ToString();
+    I.Text = value.I.ToString();
+    J.Text = value.J.ToString();
+    if (value.Up != null) {
+      for (int i = 1; i < UpId.Items.Count; i++) {
+        if (Ids[i - 1] == value.Up.Id) {
+          UpId.SelectedIndex = i;
+          break;
         }
-        // ... 其他方向 ...
-        Coord_ = value;
+      }
+      UpCheck1Mode.SelectedIndex = (value.M_Up & 0b01110000) >> 4;
+      UpCheck2Mode.SelectedIndex = (value.M_Up & 0b00001110) >> 1;
+      UpPose.SelectedIndex = value.M_Up & 0b00000001;
+    } else {
+      UpId.SelectedIndex = 0;
     }
+    // ... 其他方向 ...
+    Coord_ = value;
+  }
 }
 
 private List<Coord> Map;
@@ -165,12 +191,11 @@ private int[] Ids;
 
 // 更新界面数据到坐标点本身
 private void X_TextChanged(object sender, TextChangedEventArgs e) {
-    if (Coord_ == null) return;
-    if (Int32.TryParse(X.Text, out int _x)) {
-        Coord_.X = _x;
-    } else {
-        X.Text = ((int)Coord_.X).ToString();
-    }
+  if (Coord_ == null) return;
+  if (Int32.TryParse(X.Text, out int _x))
+    Coord_.X = _x;
+  else
+    X.Text = ((int)Coord_.X).ToString();
 }
 
 // 其他控件事件代码...
