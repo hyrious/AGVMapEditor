@@ -54,7 +54,7 @@ private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.2\textwidth]{assets/impl-1.pdf}
+    \includegraphics[width=0.3\textwidth]{assets/impl-1.pdf}
     \caption{删除坐标点流程}
     \label{fig:impl-1}
 \end{figure}
@@ -98,7 +98,7 @@ private void Ic_KeyUp(object sender, KeyEventArgs e) {
 
 \subsection{拖动递归处理}
 
-\begin{algorithm}[htbp]
+\begin{algorithm}[H]
   \caption{递归移动坐标点算法}
   \begin{algorithmic}[1]
     \Procedure{RecurUpdateNextCoords}{$cur, dx, dy$}\Comment{移动 cur 及它指向的其他点}
@@ -131,6 +131,8 @@ private void Ic_KeyUp(object sender, KeyEventArgs e) {
     \caption{移动鼠标时触发的流程}
     \label{fig:impl-2}
 \end{figure}
+
+\newpage
 
 \section{修改坐标点属性}
 
