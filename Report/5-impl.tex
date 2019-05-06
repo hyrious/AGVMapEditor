@@ -48,18 +48,18 @@ private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
 
 \section{删除坐标点}
 
-按下 \texttt{Delete} 或通过菜单上的 Edit-Delete 即可删除当前被选中的坐标点，但用掉的编号不会再次变得可用。
+按下 \texttt{Delete} 或通过菜单上的 Edit-Delete 即可删除当前被选中的坐标点，但用掉的编号不会再次变得可用。需要注意的是，删除时要记得将与其关联的连线一同删除，下面通过一个流程图来说明这一点。
 
-基本流程图：
+\subsubsection{基本流程}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.3\textwidth]{assets/impl-1.pdf}
+    \includegraphics[width=0.45\textwidth]{assets/impl-1.pdf}
     \caption{删除坐标点流程}
     \label{fig:impl-1}
 \end{figure}
 
-相关代码：
+\subsubsection{相关代码}
 
 \begin{lstlisting}[language=cs]
 private void Ic_KeyUp(object sender, KeyEventArgs e) {
@@ -125,14 +125,14 @@ private void Ic_KeyUp(object sender, KeyEventArgs e) {
 
 以上三个功能都涉及到鼠标移动，因此代码细节上我们选择将其实现在一起，其流程大致如下：
 
+\subsubsection{基本流程}
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{assets/impl-2.pdf}
+    \includegraphics[width=0.85\textwidth]{assets/impl-2.pdf}
     \caption{移动鼠标时触发的流程}
     \label{fig:impl-2}
 \end{figure}
-
-\newpage
 
 \section{修改坐标点属性}
 
@@ -154,11 +154,9 @@ private void Ic_KeyUp(object sender, KeyEventArgs e) {
   \label{fig:prop2}
 \end{figure}
 
-可以看到界面立刻产生了变化。
+可以看到界面立刻产生了变化。这是因为为了使操作更方便，我将属性编辑功能设计并实现为直接写回软件内存的形式，这大大简化了操作。现代的许多 UI（用户交互）设计都是这么做的，例如 Windows10 的``设置''功能等。
 
-这个属性编辑窗口的内容改变是直接写回内存的，所以没有相关``保存''按钮。编辑完直接关掉即可。
-
-相关代码（部分）：
+\subsubsection{相关代码}
 
 \begin{lstlisting}[language=cs]
 public Coord Coord {
@@ -187,10 +185,9 @@ public Coord Coord {
     Coord_ = value;
   }
 }
-
 private List<Coord> Map;
 private int[] Ids;
-
+// 直接写回软件内存
 // 更新界面数据到坐标点本身
 private void X_TextChanged(object sender, TextChangedEventArgs e) {
   if (Coord_ == null) return;
@@ -199,7 +196,6 @@ private void X_TextChanged(object sender, TextChangedEventArgs e) {
   else
     X.Text = ((int)Coord_.X).ToString();
 }
-
 // 其他控件事件代码...
 \end{lstlisting}
 
@@ -216,7 +212,7 @@ private void X_TextChanged(object sender, TextChangedEventArgs e) {
   \label{fig:save}
 \end{figure}
 
-相关代码：
+\subsubsection{相关代码}
 
 \begin{lstlisting}[language=cs]
 private void Sb_Click(object sender, RoutedEventArgs e) {
@@ -255,7 +251,7 @@ private void Sb_Click(object sender, RoutedEventArgs e) {
   \label{fig:sql}
 \end{figure}
 
-部分相关代码：
+\subsubsection{相关代码}
 
 \begin{lstlisting}[language=cs]
 // 生成一条插入语句

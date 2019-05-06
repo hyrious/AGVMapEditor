@@ -4,9 +4,13 @@
 % Copyright 2019 hyrious <hyrious@outlook.com>
 
 \documentclass[zihao=-4]{ctexrep}
-\ctexset{section/format+=\raggedright}
-\newcommand{\chaptertitleformat}[1]{#1}
-\usepackage[a4paper,top=3.9cm,bottom=3cm,left=3.25cm,right=2.75cm]{geometry}
+\ctexset{
+  section/format+=\raggedright,
+  chapter/fixskip=true,
+  chapter/beforeskip=0pt,
+  chapter/afterskip=22pt
+}
+\usepackage[a4paper,top=3.9cm,bottom=3cm,left=2.75cm,right=2.75cm]{geometry}
 \usepackage{url}
 \usepackage{graphicx}
 \usepackage{float}

@@ -5,12 +5,12 @@
 \usepackage{ctex,tikz}
 \usetikzlibrary{shapes,arrows}
 \begin{document}
-  \tikzstyle{rect} = [rectangle, text centered, draw=black, minimum width=3cm, minimum height=3cm]
+  \tikzstyle{rect} = [rectangle, text centered, draw=black]
   \tikzstyle{arrow} = [thick,->,>=stealth]
   \tikzstyle{erentity} = [rectangle, draw=black, text centered]
   \tikzstyle{erattr} = [ellipse, draw=black, text centered]
 
-  \begin{tikzpicture}[node distance=2cm,font=\sffamily]
+  \begin{tikzpicture}[node distance=2cm,minimum width=2cm,minimum height=1cm,font=\sffamily]
     \node (message) [erentity] {坐标点};
     \node (id) [erattr, above of=message] {ID};
     \node (text) [erattr, right of=message,node distance=3cm] {XY 坐标};
