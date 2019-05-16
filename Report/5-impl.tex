@@ -1,6 +1,6 @@
 % !TeX root = ./report.tex
 
-本章将对 AGV 地图编辑器的功能进行详细的说明，将展示本软件完成的图例以及相应的流程、代码说明。
+本章将对 AGV 地图编辑器的功能进行详细的说明，将展示本软件完成的图例以及相应的流程、代码说明。本软件使用 Visual Studio 2017 进行开发，理论上可以使用 2017 以及 2019 版的 Visual Studio 进行编译。
 
 \begin{figure}[H]
   \centering
@@ -9,9 +9,11 @@
   \label{fig:mainview}
 \end{figure}
 
+双击 Editor.exe 打开本软件。本软件的界面都是通过在 Visual Studio 中编写 XAML 代码实现的。主界面如上图，有菜单栏、地图编辑区域、属性窗口三个主要功能区。
+
 \section{启动}
 
-首次启动本程序时，会自动打开一个文件选择框选择将要打开的数据库文件，默认为 \texttt{MapData.db}，如果文件不存在则会在第一次保存时自动创建。
+首次启动本程序时，会自动打开一个文件选择框选择将要打开的数据库文件，默认为 \texttt{MapData.db}，如果文件不存在则会在第一次保存（见下）时自动创建。
 
 \begin{figure}[H]
   \centering
@@ -33,7 +35,7 @@
 
 坐标点的 ID 是自动分配的，不可以修改；XY 坐标赋值为鼠标位置，剩下的属性全都默认赋值为 0。坐标点被选中时，颜色变为红色。
 
-相关代码：
+\subsubsection{相关代码}
 
 \begin{lstlisting}[language=cs]
 private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
@@ -54,7 +56,7 @@ private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{assets/impl-1.pdf}
+    \includegraphics[width=0.38\textwidth]{assets/impl-1.pdf}
     \caption{删除坐标点流程}
     \label{fig:impl-1}
 \end{figure}
@@ -154,7 +156,7 @@ private void Ic_KeyUp(object sender, KeyEventArgs e) {
   \label{fig:prop2}
 \end{figure}
 
-可以看到界面立刻产生了变化。这是因为为了使操作更方便，我将属性编辑功能设计并实现为直接写回软件内存的形式，这大大简化了操作。现代的许多 UI（用户交互）设计都是这么做的，例如 Windows10 的``设置''功能等。
+可以看到界面立刻产生了变化。这是因为为了使操作更方便，我将属性编辑功能设计并实现为直接写回软件内存的形式，这大大简化了操作，代价是代码量也增加了。现代的许多 UI（用户交互）设计都是这么做的，例如 Windows10 的``设置''功能等。
 
 \subsubsection{相关代码}
 
@@ -203,7 +205,7 @@ private void X_TextChanged(object sender, TextChangedEventArgs e) {
 
 \section{保存到数据库}
 
-点击文件菜单的``保存''按钮，即将数据写入数据库。
+点击文件菜单的``保存''按钮，即将数据写入数据库文件。
 
 \begin{figure}[H]
   \centering
